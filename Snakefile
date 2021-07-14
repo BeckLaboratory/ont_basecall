@@ -4,6 +4,7 @@ Re-basecall ONT runs from FAST5.
 
 ### Libraries ###
 
+import datetime
 import Bio.bgzf
 import Bio.SeqIO
 import gzip

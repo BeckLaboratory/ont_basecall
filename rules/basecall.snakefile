@@ -36,7 +36,7 @@ rule ontbc_basecall_guppy:
         cell_entry = ontbclib.rules.get_cell_entry(wildcards, CELL_TABLE, config)
 
         # Get CUDA device
-        cuda_device = ontbclib.util.get_cuda_device(config)
+        cuda_device = config.get('cuda_device', '0')
 
         # Get temp directory
         temp_dir = ontbclib.filesystem.get_temp_path(cell_entry, config, suffix='/basecall')
