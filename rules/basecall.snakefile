@@ -3,7 +3,7 @@ Basecall rules.
 """
 
 BASECALL_GUPPY_DIR_PATTERN = 'results/guppy/{sample}/{cell}'
-BASECALL_GUPPY_FASTQ_PATTERN = '{cell}_guppy_fastq_{fastq_set}.fastq.gz'
+BASECALL_GUPPY_FASTQ_PATTERN = '{cell}_guppy-{profile}_fastq_{fastq_set}.fastq.gz'
 BASECALL_GUPPY_META_PATTERN = '{cell}_guppy_metadata.tar.gz'
 BASECALL_GUPPY_INFO_PATTERN = '{cell}_info.tsv.gz'
 BASECALL_GUPPY_MD5_PATTERN = '{cell}.md5'
@@ -132,7 +132,7 @@ rule ontbc_basecall_guppy:
 
                 fastq_out = os.path.join(
                     out_dir,
-                    BASECALL_GUPPY_FASTQ_PATTERN.format(cell=cell_entry['cell'], fastq_set=subdir)
+                    BASECALL_GUPPY_FASTQ_PATTERN.format(cell=cell_entry['cell'], profile=cell_entry['profile'], fastq_set=subdir)
                 )
 
                 with Bio.bgzf.BgzfWriter(fastq_out, 'wt') as out_file:
