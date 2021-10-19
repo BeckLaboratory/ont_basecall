@@ -28,6 +28,8 @@ def get_fastq_iter(fastq_list):
 rule ontbc_basecall_guppy:
     output:
         flag='results/guppy/{sample}/{cell}/basecall.flag'
+    params:
+        threads=6
     run:
 
         guppy_run_ok = True  # Fail rule if False, but do not remove data
@@ -35,8 +37,12 @@ rule ontbc_basecall_guppy:
         # Get cell entry
         cell_entry = ontbclib.rules.get_cell_entry(wildcards, CELL_TABLE, config)
 
-        # Get CUDA device
+        # Get run parameters
         cuda_device = config.get('cuda_device', '0')
+        run_prefix = config.get('run_prefix', '')
+
+        if run_prefix != '' and not run_prefix.endswith(' '):
+            run_prefix += ' '
 
         # Get temp directory
         temp_dir = ontbclib.filesystem.get_temp_path(cell_entry, config, suffix='/basecall')
@@ -69,12 +75,12 @@ rule ontbc_basecall_guppy:
             ))
 
             shell(
-                """{guppy_dir}/bin/guppy_basecaller """
+                """{run_prefix}{guppy_dir}/bin/guppy_basecaller """
                     """-s {temp_dir_guppy} """
                     """-i {fast5_dir} """
                     """-c {cfg} """
                     """--compress_fastq """
-                    """--num_alignment_threads 4 """
+                    """--num_alignment_threads {params.threads} """
                     """--device cuda:{cuda_device}"""
             )
 
